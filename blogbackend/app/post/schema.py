@@ -58,7 +58,7 @@ class CreatePost(graphene.Mutation):
         if user.is_anonymous:
             raise Exception('Not logged in!')
 
-        author = user # User.objects.filter(id=post.user_id).first()
+        author = user  # User.objects.filter(id=post.user_id).first()
         print(user)
         post_instance = PostModel(
             id=uuid.uuid4(),
@@ -69,6 +69,38 @@ class CreatePost(graphene.Mutation):
         post_instance.save()
 
         return CreatePost(post=post_instance)
+
+
+class UpdatePost(graphene.Mutation):
+    class Arguments:
+        post = PostInput(required=True)
+
+    post = graphene.Field(PostNode)
+
+    @staticmethod
+    def mutate(root, info, post=None):
+        user = info.context.user
+        if user.is_anonymous:
+            raise Exception('Not logged in!')
+
+        # check if user is authorized
+        actual_post = PostModel.objects.filter(id=post.id)
+        if actual_post:
+            author = User.objects.filter(id=actual_post.user_id).first()
+            print(user)
+            print(author)
+            if user != author:
+                raise Exception('not authorized!')
+
+            if post.title is not None:
+                actual_post.title = post.title
+            if post.content is not None:
+                actual_post.content = actual_post.content,
+
+            actual_post.save()
+            return UpdatePost(post=actual_post)
+        else:
+            return UpdatePost(post=None)
 
 
 class Mutation(graphene.ObjectType):
