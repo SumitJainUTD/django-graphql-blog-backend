@@ -84,9 +84,10 @@ class UpdatePost(graphene.Mutation):
             raise Exception('Not logged in!')
 
         # check if user is authorized
-        actual_post = PostModel.objects.filter(id=post.id)
+        actual_post = PostModel.objects.filter(id=post.id).first()
         if actual_post:
-            author = User.objects.filter(id=actual_post.user_id).first()
+            print(actual_post)
+            author = actual_post.author
             print(user)
             print(author)
             if user != author:
@@ -95,7 +96,7 @@ class UpdatePost(graphene.Mutation):
             if post.title is not None:
                 actual_post.title = post.title
             if post.content is not None:
-                actual_post.content = actual_post.content,
+                actual_post.content = post.content,
 
             actual_post.save()
             return UpdatePost(post=actual_post)
@@ -105,6 +106,7 @@ class UpdatePost(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     create_post = CreatePost.Field()
+    update_post = UpdatePost.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
