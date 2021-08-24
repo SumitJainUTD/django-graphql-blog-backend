@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -148,6 +148,7 @@ GRAPHQL_JWT = {
 
     # optional
     "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=5),
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

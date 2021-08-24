@@ -18,6 +18,7 @@ class AuthMutation(graphene.ObjectType):
     password_reset = mutations.PasswordReset.Field()
     password_change = mutations.PasswordChange.Field()
     refresh_token = mutations.RefreshToken.Field()
+    logout = mutations.RevokeToken.Field()
 
 
 class Mutation(AuthMutation, graphene.ObjectType):

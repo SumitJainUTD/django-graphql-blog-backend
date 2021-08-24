@@ -14,6 +14,7 @@ class PostNode(DjangoObjectType):
 class UserType(DjangoObjectType):
     class Meta:
         model = User
+        fields = ("username", "first_name", "last_name")
 
 
 class Query(graphene.ObjectType):
@@ -86,10 +87,7 @@ class UpdatePost(graphene.Mutation):
         # check if user is authorized
         actual_post = PostModel.objects.filter(id=post.id).first()
         if actual_post:
-            print(actual_post)
             author = actual_post.author
-            print(user)
-            print(author)
             if user != author:
                 raise Exception('not authorized!')
 
